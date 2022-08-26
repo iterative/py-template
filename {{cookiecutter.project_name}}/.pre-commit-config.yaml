@@ -43,4 +43,3 @@ repos:
           - flake8-comprehensions
           - flake8-debugger
           - flake8-string-format
-          - bandit<1.7.3
