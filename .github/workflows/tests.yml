@@ -31,7 +31,9 @@ jobs:
       with:
         fetch-depth: 0
 
-    - uses: wntrblm/nox@2022.8.7
+    - name: Setup nox
+      uses: wntrblm/nox@2022.8.7
+
     - name: Generate template via cruft
       run: |
         pip install cruft
