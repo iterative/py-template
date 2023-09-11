@@ -5,16 +5,15 @@ on:
     types: [published]
   workflow_dispatch:
 
-permissions:
-  contents: read
-  id-token: write
-
 env:
   FORCE_COLOR: "1"
 
 jobs:
   release:
     environment: pypi
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ubuntu-latest
     steps:
     - name: Check out the repository
