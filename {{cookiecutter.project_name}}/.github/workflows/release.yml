@@ -34,5 +34,3 @@ jobs:
     - name: Upload package
       if: github.event_name == 'release'
       uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        password: ${{"{{"}} secrets.PYPI_TOKEN {{"}}"}}
