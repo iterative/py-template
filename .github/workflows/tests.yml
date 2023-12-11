@@ -47,7 +47,7 @@ jobs:
         cd ${{ matrix.context.project_name }}
         echo "::group::tree" && tree -a && echo "::endgroup::"
         echo "::group::.cruft.json" && cat .cruft.json && echo "::endgroup::"
-        echo "::group::setup.cfg" && cat setup.cfg && echo "::endgroup::"
+        echo "::group::pyproject.toml" && cat pyproject.toml && echo "::endgroup::"
         echo "::group::CONTRIBUTING.rst" && cat CONTRIBUTING.rst && echo "::endgroup::"
         echo "::group::noxfile.py" && cat noxfile.py && echo "::endgroup::"
         echo "::group::tests.yml" && cat .github/workflows/tests.yml && echo "::endgroup::"
