@@ -101,6 +101,8 @@ ignore = [
     "ISC001", # single-line-implicit-string-concatenation
     "SIM105", # suppressible-exception
     "SIM108", # if-else-block-instead-of-if-exp
+    "D203", # one blank line before class
+    "D213", # multi-line-summary-second-line
 ]
 select = ["ALL"]
 show-source = true
