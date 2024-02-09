@@ -23,37 +23,38 @@ jobs:
         os: [ubuntu-20.04, windows-latest, macos-latest]
         pyv: ['3.8', '3.9', '3.10', '3.11']
         include:
-        - {os: ubuntu-latest, pyv: 'pypy3.8'}
+          - {os: ubuntu-latest, pyv: 'pypy3.8'}
 
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Set up Python {% raw %}${{ matrix.pyv }}{% endraw %}
-      uses: actions/setup-python@v5
-      with:
-        python-version: {% raw %}${{ matrix.pyv }}{% endraw %}
+      - name: Set up Python {% raw %}${{ matrix.pyv }}{% endraw %}
+        uses: actions/setup-python@v5
+        with:
+          python-version: {% raw %}${{ matrix.pyv }}{% endraw %}
 
-    - name: Upgrade pip and nox
-      run: |
-        python -m pip install --upgrade pip nox
-        pip --version
-        nox --version
+      - name: Upgrade pip and nox
+        run: |
+          python -m pip install --upgrade pip nox
+          pip --version
+          nox --version
 
-    - name: Lint code and check dependencies
-      run: nox -s lint safety
+      - name: Lint code and check dependencies
+        run: nox -s lint safety
 
-    - name: Run tests
-      run: nox -s tests-{% raw %}${{ matrix.nox_pyv || matrix.pyv }}{% endraw %} -- --cov-report=xml
+      - name: Run tests
+        run: nox -s tests-{% raw %}${{ matrix.nox_pyv || matrix.pyv }}{% endraw %} -- --cov-report=xml
 
-    - name: Upload coverage report
-      uses: codecov/codecov-action@v3
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v3
 
-    - name: Build package
-      run: nox -s build
+      - name: Build package
+        run: nox -s build
+
 {% if cookiecutter.docs != "False" %}
-    - name: Build docs
-      run: nox -s docs
+      - name: Build docs
+        run: nox -s docs
 {% endif -%}
