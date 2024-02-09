@@ -11,67 +11,67 @@ inputs:
 runs:
   using: composite
   steps:
-  - name: Set up Python
-    uses: actions/setup-python@v5
-    with:
-      python-version: '3.10'
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
 
-  - name: Install cruft
-    shell: bash
-    run: pip install cruft==2.15.0  # renovate: datasource=pypi
+    - name: Install cruft
+      shell: bash
+      run: pip install cruft==2.15.0 # renovate: datasource=pypi
 
-  - name: Update template via cruft
-    shell: bash
-    id: cruft
-    run: |
-      echo "template=$(cat .cruft.json | jq '.template' -r)" >> $GITHUB_OUTPUT
-      echo "old_commit=$(cat .cruft.json | jq '.commit' -r)" >> $GITHUB_OUTPUT
-      cruft update -y
-      echo "new_commit=$(cat .cruft.json | jq '.commit' -r)" >> $GITHUB_OUTPUT
+    - name: Update template via cruft
+      shell: bash
+      id: cruft
+      run: |
+        echo "template=$(cat .cruft.json | jq '.template' -r)" >> $GITHUB_OUTPUT
+        echo "old_commit=$(cat .cruft.json | jq '.commit' -r)" >> $GITHUB_OUTPUT
+        cruft update -y
+        echo "new_commit=$(cat .cruft.json | jq '.commit' -r)" >> $GITHUB_OUTPUT
 
-  - name: Check current state
-    shell: bash
-    run: |
-      git status --untracked-files=all
-      git diff
+    - name: Check current state
+      shell: bash
+      run: |
+        git status --untracked-files=all
+        git diff
 
-  - name: Try to apply reject hunks
-    shell: bash
-    id: apply-rejects
-    run: |
-      for reject in $(git ls-files --others --exclude-standard '*.rej'); do
-        file=${reject%.rej}
-        cat ${reject}
-        patch -p1 --merge --no-backup-if-mismatch ${file} < ${reject} || echo "  - \`${file}\`" >> /tmp/conflicts
-        rm ${reject}
-        echo
+    - name: Try to apply reject hunks
+      shell: bash
+      id: apply-rejects
+      run: |
+        for reject in $(git ls-files --others --exclude-standard '*.rej'); do
+          file=${reject%.rej}
+          cat ${reject}
+          patch -p1 --merge --no-backup-if-mismatch ${file} < ${reject} || echo "  - \`${file}\`" >> /tmp/conflicts
+          rm ${reject}
+          echo
 
-      echo 'conflicts<<EOF' >> $GITHUB_OUTPUT
-      test -f /tmp/conflicts && cat /tmp/conflicts >> $GITHUB_OUTPUT
-      echo 'EOF' >> $GITHUB_OUTPUT
-      done
+        echo 'conflicts<<EOF' >> $GITHUB_OUTPUT
+        test -f /tmp/conflicts && cat /tmp/conflicts >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
+        done
 
-  - name: Check diff
-    id: diff
-    shell: bash
-    run: |
-      git status --untracked-files=all
-      echo 'changes<<EOF' >> $GITHUB_OUTPUT
-      git diff >> $GITHUB_OUTPUT
-      echo 'EOF' >> $GITHUB_OUTPUT
+    - name: Check diff
+      id: diff
+      shell: bash
+      run: |
+        git status --untracked-files=all
+        echo 'changes<<EOF' >> $GITHUB_OUTPUT
+        git diff >> $GITHUB_OUTPUT
+        echo 'EOF' >> $GITHUB_OUTPUT
 
-  - name: Create PR
-    if: ${{ steps.diff.outputs.changes != '' }}
-    uses: peter-evans/create-pull-request@v5
-    with:
-      token: ${{ inputs.token }}
-      commit-message: update template
-      title: update template
-      draft: true
-      body: |
-        Automated changes to update template with ${{ steps.cruft.outputs.template }}.
+    - name: Create PR
+      if: ${{ steps.diff.outputs.changes != '' }}
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ inputs.token }}
+        commit-message: update template
+        title: update template
+        draft: true
+        body: |
+          Automated changes to update template with ${{ steps.cruft.outputs.template }}.
 
-        ${{ steps.apply-rejects.outputs.conflicts != '' && 'There may be merge conflicts in these files that may need to be resolved manually:' || '' }}
-        ${{ steps.apply-rejects.outputs.conflicts }}
+          ${{ steps.apply-rejects.outputs.conflicts != '' && 'There may be merge conflicts in these files that may need to be resolved manually:' || '' }}
+          ${{ steps.apply-rejects.outputs.conflicts }}
 
-        __See Changelog__: ${{ steps.cruft.outputs.template }}/compare/${{ steps.cruft.outputs.old_commit }}...${{ steps.cruft.outputs.new_commit }}.
+          __See Changelog__: ${{ steps.cruft.outputs.template }}/compare/${{ steps.cruft.outputs.old_commit }}...${{ steps.cruft.outputs.new_commit }}.

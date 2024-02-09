@@ -22,47 +22,47 @@ jobs:
     strategy:
       matrix:
         context:
-        - {project_name: testing-123}
-        - {project_name: testing-123-with-docs, docs: true}
+          - {project_name: testing-123}
+          - {project_name: testing-123-with-docs, docs: true}
 
     name: ${{ matrix.context.project_name }}
     steps:
-    - name: Check out the repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Setup nox
-      uses: wntrblm/nox@2023.04.22
-      with:
-        python-versions: "3.8, 3.9, 3.10, 3.11, pypy-3.8, pypy-3.9"
+      - name: Setup nox
+        uses: wntrblm/nox@2023.04.22
+        with:
+          python-versions: "3.8, 3.9, 3.10, 3.11, pypy-3.8, pypy-3.9"
 
-    - name: Generate template via cruft
-      run: |
-        pip install cruft
-        cruft create -y --extra-context '${{ toJSON(matrix.context) }}' .
+      - name: Generate template via cruft
+        run: |
+          pip install cruft
+          cruft create -y --extra-context '${{ toJSON(matrix.context) }}' .
 
-    - name: Show directory structure and file contents
-      run: |
-        cd ${{ matrix.context.project_name }}
-        echo "::group::tree" && tree -a && echo "::endgroup::"
-        echo "::group::.cruft.json" && cat .cruft.json && echo "::endgroup::"
-        echo "::group::pyproject.toml" && cat pyproject.toml && echo "::endgroup::"
-        echo "::group::CONTRIBUTING.rst" && cat CONTRIBUTING.rst && echo "::endgroup::"
-        echo "::group::noxfile.py" && cat noxfile.py && echo "::endgroup::"
-        echo "::group::tests.yml" && cat .github/workflows/tests.yml && echo "::endgroup::"
+      - name: Show directory structure and file contents
+        run: |
+          cd ${{ matrix.context.project_name }}
+          echo "::group::tree" && tree -a && echo "::endgroup::"
+          echo "::group::.cruft.json" && cat .cruft.json && echo "::endgroup::"
+          echo "::group::pyproject.toml" && cat pyproject.toml && echo "::endgroup::"
+          echo "::group::CONTRIBUTING.rst" && cat CONTRIBUTING.rst && echo "::endgroup::"
+          echo "::group::noxfile.py" && cat noxfile.py && echo "::endgroup::"
+          echo "::group::tests.yml" && cat .github/workflows/tests.yml && echo "::endgroup::"
 
-    - name: Initialize repository
-      run: |
-        cd ${{ matrix.context.project_name }}
-        git init
-        git config user.name 'github-actions[bot]'
-        git config user.email 'github-actions[bot]@users.noreply.github.com'
-        git add .
-        git commit -m "init"
+      - name: Initialize repository
+        run: |
+          cd ${{ matrix.context.project_name }}
+          git init
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m "init"
 
-    - name: Run nox
-      run: |
-        cd ${{ matrix.context.project_name }}
-        nox
-        nox -s lint safety build dev ${{ matrix.context.docs && 'docs'}}
+      - name: Run nox
+        run: |
+          cd ${{ matrix.context.project_name }}
+          nox
+          nox -s lint safety build dev ${{ matrix.context.docs && 'docs'}}

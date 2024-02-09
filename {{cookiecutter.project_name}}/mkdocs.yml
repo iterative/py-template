@@ -19,15 +19,15 @@ extra:
       link: https://github.com/iterative/
 
 plugins:
-- search
-- gen-files:
-    scripts:
-    - docs/gen_ref_pages.py
-- section-index
-- mkdocstrings:
-    handlers:
-      python:
-        rendering:
-          show_submodules: no
-    watch:
-    - src/{{cookiecutter.package_name}}
+  - search
+  - gen-files:
+      scripts:
+        - docs/gen_ref_pages.py
+  - section-index
+  - mkdocstrings:
+      handlers:
+        python:
+          rendering:
+            show_submodules: no
+      watch:
+        - src/{{cookiecutter.package_name}}

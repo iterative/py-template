@@ -33,6 +33,6 @@ repos:
     rev: v2.12.0
     hooks:
       - id: pretty-format-toml
-        args: [--autofix]
+        args: [--autofix, --no-sort]
       - id: pretty-format-yaml
         args: [--autofix, --indent, '2', '--offset', '2', --preserve-quotes]
