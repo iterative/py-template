@@ -12,21 +12,34 @@ repos:
       - id: check-merge-conflict
         args: ['--assume-in-merge']
       - id: check-toml
+        exclude: "{{cookiecutter.project_name}}/pyproject.toml"
       - id: check-yaml
+        exclude: "{{cookiecutter.project_name}}/"
       - id: debug-statements
+        exclude: "{{cookiecutter.project_name}}/noxfile.py"
       - id: end-of-file-fixer
       - id: mixed-line-ending
         args: ['--fix=lf']
       - id: sort-simple-yaml
       - id: trailing-whitespace
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 'v0.1.13'
+    rev: 'v0.3.4'
     hooks:
       - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
+        args: [--fix, --exit-non-zero-on-fix, "--config=pyproject.toml"]
       - id: ruff-format
+        args: ["--config=pyproject.toml"]
   - repo: https://github.com/codespell-project/codespell
     rev: v2.2.6
     hooks:
       - id: codespell
         additional_dependencies: ["tomli"]
+  - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+    rev: v2.12.0
+    hooks:
+      - id: pretty-format-toml
+        args: [--autofix, --no-sort]
+        exclude: "{{cookiecutter.project_name}}/pyproject.toml"
+      - id: pretty-format-yaml
+        args: [--autofix, --indent, '2', '--offset', '2', --preserve-quotes]
+        exclude: "{{cookiecutter.project_name}}"
