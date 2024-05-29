@@ -1,2 +1,6 @@
 [tool.ruff]
 extend-exclude = ["[{][{]cookiecutter.project_name[}][}]/noxfile.py"]
+
+[tool.codespell]
+ignore-words-list = " "
+skip = "CODE_OF_CONDUCT.rst,{{cookiecutter.project_name}}/CODE_OF_CONDUCT.rst"
