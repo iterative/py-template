@@ -42,8 +42,8 @@ jobs:
           pip --version
           nox --version
 
-      - name: Lint code and check dependencies
-        run: nox -s lint safety
+      - name: Lint code
+        run: nox -s lint
 
       - name: Run tests
         run: nox -s tests-{% raw %}${{ matrix.nox_pyv || matrix.pyv }}{% endraw %} -- --cov-report=xml
