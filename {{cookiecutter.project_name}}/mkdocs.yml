@@ -29,5 +29,6 @@ plugins:
         python:
           rendering:
             show_submodules: no
-      watch:
-        - src/{{cookiecutter.package_name}}
+
+watch:
+  - src/{{cookiecutter.package_name}}
