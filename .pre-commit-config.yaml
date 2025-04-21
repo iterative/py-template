@@ -23,14 +23,14 @@ repos:
       - id: sort-simple-yaml
       - id: trailing-whitespace
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: 'v0.8.4'
+    rev: 'v0.11.6'
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix, "--config=pyproject.toml"]
       - id: ruff-format
         args: ["--config=pyproject.toml"]
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.3.0
+    rev: v2.4.1
     hooks:
       - id: codespell
         additional_dependencies: ["tomli"]
